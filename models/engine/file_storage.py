@@ -73,22 +73,25 @@ class FileStorage:
         """
         Gets a particular class based on the ID provided
         """
-        if cls not in classes:
-            return
+        # if cls not in classes:
+        #     return
 
-        for key, value in self.__objects:
-            if cls == value.__class__.__name__ and id == value["id"]:
+        # for key, value in self.__objects:
+        #     if cls == value.__class__.__name__ and id == value["id"]:
+        #         return value
+        """
+        Return one object based on the class name and its ID, or
+        None if not found
+        """
+        if cls not in classes.values():
+            return None
+
+        all_cls = models.storage.all(cls)
+        for value in all_cls.values():
+            if (value.id == id):
                 return value
 
-    # def get(self, cls, id):
-    #     """Retrieve an object"""
-    #     if cls is not None and type(cls) is str and id is not None and\
-    #        type(id) is str and cls in name2class:
-    #         cls = name2class[cls]
-    #         result = self.__session.query(cls).filter(cls.id == id).first()
-    #         return result
-    #     else:
-    #         return None
+        return None
 
     def count(self, cls=None):
         """Count number of objects in storage"""
