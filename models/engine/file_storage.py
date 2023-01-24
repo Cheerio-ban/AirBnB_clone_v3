@@ -94,11 +94,25 @@ class FileStorage:
         # return None
 
     def count(self, cls=None):
-        """Count number of objects in storage"""
-        total = 0
-        if type(cls) == str and cls in classes:
-            total = len(self.all(cls))
-        elif cls is None:
-            total = len(self.__objects)
-        return total
+        """
+        Counts and returns the number of objects in storage
+        """
+        all_class = classes.values()
+
+        if not cls:
+            count = 0
+            for clas in all_class:
+                count += len(models.storage.all(clas).values())
+        else:
+            count = len(models.storage.all(cls).values())
+
+        return count
+    # def count(self, cls=None):
+    #     """Count number of objects in storage"""
+    #     total = 0
+    #     if type(cls) == str and cls in classes:
+    #         total = len(self.all(cls))
+    #     elif cls is None:
+    #         total = len(self.__objects)
+    #     return total
         
