@@ -13,10 +13,12 @@ cities = {
     "users": "User"
 }
 
+
 @app_views.route('/status', strict_slashes=False)
 def status():
     """hbnb status"""
     return jsonify({"status": "OK"})
+
 
 @app_views.route('/stats', strict_slashes=False)
 def hbnbStats():
