@@ -55,7 +55,7 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
+        except Exception as ex:
             pass
 
     def delete(self, obj=None):
@@ -69,31 +69,26 @@ class FileStorage:
         """call reload() method for deserializing the JSON file to objects"""
         self.reload()
 
-    # def get(self, cls, id):
-    #     """
-    #     Gets a particular class based on the ID provided
-    #     """
-    #     if cls not in classes:
-    #         return
-
-    #     for key, value in self.__objects:
-    #         if cls == value.__class__.__name__ and id == value["id"]:
-    #             return value
     def get(self, cls, id):
-        """Retrieve an object"""
-        if cls is not None and type(cls) is str and id is not None and\
-           type(id) is str and cls in classes:
-            key = cls + '.' + id
-            obj = self.__objects.get(key, None)
-            return obj
-        else:
+        """get an object from the file storage"""
+        from models import storage
+        try:
+            objs = storage.all(cls).values()
+        except KeyError:
             return None
-            
+        for obj in objs:
+            if obj.id == id:
+                return obj
+        return None
+
     def count(self, cls=None):
-        """Count number of objects in storage"""
-        total = 0
-        if type(cls) == str and cls in classes:
-            total = len(self.all(cls))
-        elif cls is None:
-            total = len(self.__objects)
-        return total
+        """Count the number of objects present"""
+        from models import storage
+        if cls is None:
+            objs = storage.all().values()
+        else:
+            try:
+                objs = storage.all(cls).values()
+            except KeyError:
+                return 0
+        return len(objs)
